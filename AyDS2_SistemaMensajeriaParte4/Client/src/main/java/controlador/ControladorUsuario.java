@@ -2,7 +2,6 @@ package controlador;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,11 +15,11 @@ import dto.RespuestaLista;
 import dto.UsuarioDTO;
 import modeloNegocio.*;
 import util.Util;
-import vistas.*;
+import vistasUsuario.*;
 
 public class ControladorUsuario implements ActionListener, Observer {
-	protected IVista ventana;
-	protected IVista ventana2;
+	protected IVistaUsuario ventana;
+	protected IVistaUsuario ventana2;
 	protected SistemaUsuario sistemaUsuario;
 
 	public ControladorUsuario(SistemaUsuario sistemaUsuario) {
@@ -31,7 +30,7 @@ public class ControladorUsuario implements ActionListener, Observer {
 		sistemaUsuario.addObserver(this);
 	}
 
-	public IVista getVentana() {
+	public IVistaUsuario getVentana() {
 		return ventana;
 	}
 
@@ -39,7 +38,7 @@ public class ControladorUsuario implements ActionListener, Observer {
 		return sistemaUsuario;
 	}
 
-	public void setVentana(IVista ventana) {
+	public void setVentana(IVistaUsuario ventana) {
 		this.ventana = ventana;
 		this.ventana.setActionListener(this);
 		this.ventana.setVisible(true);
@@ -76,11 +75,11 @@ public class ControladorUsuario implements ActionListener, Observer {
 		return lista;
 	}
 
-	public IVista getVentana2() {
+	public IVistaUsuario getVentana2() {
 		return ventana2;
 	}
 
-	public void setVentana2(IVista ventana2) {
+	public void setVentana2(IVistaUsuario ventana2) {
 		this.ventana2 = ventana2;
 		this.ventana2.setActionListener(this);
 		this.ventana2.setVisible(true);

@@ -7,13 +7,12 @@ import java.util.Observer;
 
 import modeloNegocio.SistemaServidor;
 import util.Util;
-import vistas.IVista;
-import vistas.VentanaRegistraServidor;
-import vistas.VentanaServidor;
+import vistaServidor.*;
+
 
 public class ControladorServer implements ActionListener {
     private SistemaServidor sistemaServidor;
-    private IVista ventana;
+    private IVistaServidor ventana;
 
     public ControladorServer(SistemaServidor sistemaServidor) {
         this.ventana = new VentanaRegistraServidor();
@@ -22,7 +21,7 @@ public class ControladorServer implements ActionListener {
         this.ventana.setActionListener(this);
     }
 
-    public void setVentana(IVista ventana) {
+    public void setVentana(IVistaServidor ventana) {
         this.ventana = ventana;
         this.ventana.setVisible(true);
     }

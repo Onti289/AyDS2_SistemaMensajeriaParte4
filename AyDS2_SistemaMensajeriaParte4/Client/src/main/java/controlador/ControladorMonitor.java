@@ -9,7 +9,7 @@ import dto.ServidorDTO;
 import modeloNegocio.Mensaje;
 import modeloNegocio.SistemaMonitor;
 import util.Util;
-import vistas.VentanaMonitor;
+import vistaMonitor.VentanaMonitor;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
