@@ -21,7 +21,10 @@ public class UsuarioDTO implements Serializable {
         this.tipoPersistencia=tipoPersistencia;
     }
     
-    public String getTipoPersistencia() {
+    public void setTipoPersistencia(String tipoPersistencia) {
+		this.tipoPersistencia = tipoPersistencia;
+	}
+	public String getTipoPersistencia() {
 		return tipoPersistencia;
 	}
 

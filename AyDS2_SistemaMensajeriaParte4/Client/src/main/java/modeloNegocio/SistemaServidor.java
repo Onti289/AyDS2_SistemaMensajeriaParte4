@@ -139,18 +139,20 @@ public class SistemaServidor {
 
 										if (tipo == 1) {
 											solicitud.setTipoSolicitud(Util.CTELOGIN);
+											String tipoPersistencia=buscaTipoPersistenciaUsuario(usuarioLogin);
 											/*String clave = usuarioLogin.getNombre();
 											ConexionUsuario conexion = new ConexionUsuario(usuarioLogin, oos, ois,
 													clienteSocket);
 											conexionesUsuarios.put(clave, conexion);*/
 											this.listaConectados.add(new Usuario(usuarioLogin.getNombre()));
-
+											solicitud.getUsuarioDTO().setTipoPersistencia(tipoPersistencia);
 											principalSincronizaSecundario(solicitud);
 										} else if (tipo == 2) {
 											solicitud.setTipoSolicitud(Util.CTEUSUARIOLOGUEADO);
 										} else {
 											solicitud.setTipoSolicitud(Util.CTEUSUERINEXISTENTE);
 										}
+										
 										enviaRespuestaUsuario(solicitud, oos);
 										break;
 
@@ -218,6 +220,16 @@ public class SistemaServidor {
 			}
 		});
 		serverThread.start();
+	}
+
+	private String buscaTipoPersistenciaUsuario(UsuarioDTO usuarioLogin) {
+		String nombre = usuarioLogin.getNombre();
+		for (Usuario u : listaUsuarios) {
+			if (u.getNickName().equalsIgnoreCase(nombre)) {
+				return u.getTipoPersistencia();
+			}
+		}
+		return null;
 	}
 
 	private String generarClave(String ip, int puerto) {
@@ -598,7 +610,7 @@ public class SistemaServidor {
 	public boolean registrarUsuario(UsuarioDTO usuariodto) {
 		boolean registro = true;
 		if (!existeUsuarioPorNombre(usuariodto.getNombre())) {
-			Usuario usuario = new Usuario(usuariodto.getNombre());
+			Usuario usuario = new Usuario(usuariodto.getNombre(),usuariodto.getTipoPersistencia());
 			this.listaUsuarios.add(usuario);
 			this.listaConectados.add(usuario);
 		} else {

@@ -3,6 +3,10 @@ package modeloNegocio;
 import java.io.Serializable;
 import java.util.*;
 import dto.*;
+import persistencia.IAbstractFactoryPersistencia;
+import persistencia.IPersistenciaContacto;
+import persistencia.IPersistenciaMensaje;
+import persistencia.SelectorDePersistencia;
 import util.*;
 
 @SuppressWarnings("serial")
@@ -12,11 +16,11 @@ public class Usuario implements Serializable {
 	private int puerto;
 	private transient PriorityQueue<Usuario> agenda = new PriorityQueue<>(Comparator.comparing(Usuario::getNickName));
 	private String tipoPersistencia;
-	
 	private transient List<Usuario> listaConversaciones = new LinkedList<>();
 
 	private transient ArrayList<Mensaje> mensajes = new ArrayList<>();
-
+	private IPersistenciaContacto contactoPersistencia;
+	private IPersistenciaMensaje mensajePersistencia;
 	// constructor para usuario main
 	public Usuario(String nickName, int puerto) {
 		super();
@@ -48,6 +52,9 @@ public class Usuario implements Serializable {
 		this.puerto=0;
 		this.ip=null;
 		this.tipoPersistencia=tipoPersistencia;
+		IAbstractFactoryPersistencia fabricaPersistencia=SelectorDePersistencia.getFabrica(tipoPersistencia);
+		this.contactoPersistencia=fabricaPersistencia.crearPersistenciaContacto();
+		this.mensajePersistencia=fabricaPersistencia.crearPersistenciaMensaje();
 	}
 	public String getNickName() {
 		return nickName;
@@ -80,11 +87,11 @@ public class Usuario implements Serializable {
 
 	public void guardarMensaje(Mensaje msg) {
 		this.mensajes.add(msg);
+		this.mensajePersistencia.guardarMensaje(this.nickName,msg);
 	}
 
 	public void recibirMensaje(Mensaje m) {
 		this.agregarConversacion(m.getEmisor());
-		// Mensaje m = new Mensaje(contenido, LocalDateTime.now(), emisor, this);
 		this.guardarMensaje(m);
 	}
 
@@ -140,7 +147,7 @@ public class Usuario implements Serializable {
 
 	public void agregarConversacion(Usuario contacto) {
 		if (!this.agenda.contains(contacto)) {
-			this.agenda.add(contacto);
+			agregaContacto(contacto);
 		}
 		if (this.listaConversaciones.isEmpty() || !this.listaConversaciones.contains(contacto)) {
 			this.listaConversaciones.add(contacto);
@@ -153,7 +160,7 @@ public class Usuario implements Serializable {
 
 	public void agregaContacto(Usuario contacto) {
 		agenda.add(contacto);
-		// this.muestraContactos();
+		this.contactoPersistencia.guardarContacto(this.nickName,contacto.getNickName());
 	}
 
 	public void muestraContactos() {
@@ -186,5 +193,10 @@ public class Usuario implements Serializable {
 			}
 		}
 		return esta;
+	}
+
+	public void CargaMensajesContactos() {
+		this.agenda=this.contactoPersistencia.cargarContacto(this.nickName);
+		this.mensajes=this.mensajePersistencia.cargarMensaje(this.nickName);
 	}
 }

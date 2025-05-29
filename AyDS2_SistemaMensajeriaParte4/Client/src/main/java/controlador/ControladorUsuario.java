@@ -48,7 +48,7 @@ public class ControladorUsuario implements ActionListener, Observer {
 
 		this.sistemaUsuario.enviaSolicitudAServidor(nickName,tipoPersistencia, tipoSolicitud);
 	}
-
+	
 	public String getNickNamePuerto() {
 		return "Nickname:" + sistemaUsuario.getnickName() + "\nPuerto:" + sistemaUsuario.getPuerto();
 	}
@@ -146,8 +146,9 @@ public class ControladorUsuario implements ActionListener, Observer {
 			if (this.ventana instanceof VentanaLoginORegistrar) {
 				VentanaLoginORegistrar ventanaLogin = (VentanaLoginORegistrar) this.ventana;
 				this.sistemaUsuario.estableceConexion(ventanaLogin.getUsuario());
-				setUser(ventanaLogin.getUsuario(), Util.CTELOGIN);
-			}
+				
+				setUser(ventanaLogin.getUsuario(),"", Util.CTELOGIN); // le mandamos tipoPersistencia vacio ya que el que se encarga de chequear que tipo
+			}														//de persistencia tiene es el servidor
 
 			break;
 
@@ -258,8 +259,8 @@ public class ControladorUsuario implements ActionListener, Observer {
 					this.ventana.setVisible(false);
 					this.setVentana(new VentanaPrincipal(this));
 					((VentanaPrincipal) ventana).TitulonameUsuario(solicitud.getNombre());
-					System.out.println("11" + solicitud.getTipoSolicitud());
-					this.sistemaUsuario.enviaSolicitudAServidor(solicitud.getNombre(), Util.CTESOLICITARMENSAJES);
+					this.sistemaUsuario.getUsuario().CargaMensajesContactos();
+					this.sistemaUsuario.enviaSolicitudAServidor(solicitud.getNombre(),"",Util.CTESOLICITARMENSAJES);
 				} else { // no se pudo ni registrar ni loguear
 					if (solicitud.getTipoSolicitud().equalsIgnoreCase(Util.CTEUSUARIOLOGUEADO)) {
 						((VentanaLoginORegistrar) ventana).mostrarErrorUsuarioYaLogueado();

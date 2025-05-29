@@ -89,6 +89,7 @@ public class SistemaUsuario extends Observable {
 
 	public void setUsuario(String nickname,String tipoPersistencia) {
 		this.usuario = new Usuario(nickname,tipoPersistencia);
+		
 	}
 
 	public boolean existeContactoPorNombre(PriorityQueue<Usuario> lista, String nombreBuscado) {

@@ -40,4 +40,5 @@ public class Solicitud implements Serializable {
     public void setTipoSolicitud(String solicitud) {
         this.tipoSolicitud = solicitud;
     }
+    
 }
