@@ -8,8 +8,8 @@ public class Solicitud implements Serializable {
     private String tipoSolicitud; // Ej: "OBTENER_USUARIOS"
     private UsuarioDTO usuariodto;
 
-    public Solicitud(UsuarioDTO u, String tipo) {
-        this.tipoSolicitud = tipo;
+    public Solicitud(UsuarioDTO u, String tipoSolicitud) {
+        this.tipoSolicitud = tipoSolicitud;
         this.usuariodto = u;
     }
 

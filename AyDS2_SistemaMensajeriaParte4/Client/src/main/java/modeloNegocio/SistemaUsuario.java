@@ -79,7 +79,7 @@ public class SistemaUsuario extends Observable {
 	public void pedirListaUsuarios() {
 		try {
 
-			Solicitud solicitud = new Solicitud(new UsuarioDTO(this.getnickName()), Util.SOLICITA_LISTA_USUARIO);
+			Solicitud solicitud = new Solicitud(new UsuarioDTO(this.getnickName(),this.usuario.getTipoPersistencia()), Util.SOLICITA_LISTA_USUARIO);
 			oos.writeObject(solicitud);
 			oos.flush();
 		} catch (IOException e) {
@@ -87,8 +87,8 @@ public class SistemaUsuario extends Observable {
 		}
 	}
 
-	public void setUsuario(String nickname) {
-		this.usuario = new Usuario(nickname);
+	public void setUsuario(String nickname,String tipoPersistencia) {
+		this.usuario = new Usuario(nickname,tipoPersistencia);
 	}
 
 	public boolean existeContactoPorNombre(PriorityQueue<Usuario> lista, String nombreBuscado) {
@@ -192,7 +192,7 @@ public class SistemaUsuario extends Observable {
 								// usuario
 								if (solicitud.getTipoSolicitud().equalsIgnoreCase(Util.CTEREGISTRO)
 										|| solicitud.getTipoSolicitud().equalsIgnoreCase(Util.CTELOGIN)) {
-									setUsuario(solicitud.getNombre());
+									setUsuario(solicitud.getNombre(),solicitud.getUsuarioDTO().getTipoPersistencia());
 								}
 								setChanged(); // importante
 								notifyObservers(solicitud);
@@ -299,11 +299,11 @@ public class SistemaUsuario extends Observable {
 		}
 	}
 
-	public void enviaSolicitudAServidor(String nickName, String tipo) {
+	public void enviaSolicitudAServidor(String nickName,String tipoPersistencia, String tipoSolicitud) {
 
 		try {
 			if (this.puerto_servidor != -1) {
-				Solicitud soli = new Solicitud(new UsuarioDTO(nickName), tipo);
+				Solicitud soli = new Solicitud(new UsuarioDTO(nickName,tipoPersistencia),tipoSolicitud);
 				oos.writeObject(soli);
 				oos.flush();
 			}

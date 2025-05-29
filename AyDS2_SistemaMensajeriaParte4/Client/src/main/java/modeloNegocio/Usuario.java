@@ -11,7 +11,8 @@ public class Usuario implements Serializable {
 	private String ip;
 	private int puerto;
 	private transient PriorityQueue<Usuario> agenda = new PriorityQueue<>(Comparator.comparing(Usuario::getNickName));
-
+	private String tipoPersistencia;
+	
 	private transient List<Usuario> listaConversaciones = new LinkedList<>();
 
 	private transient ArrayList<Mensaje> mensajes = new ArrayList<>();
@@ -23,7 +24,11 @@ public class Usuario implements Serializable {
 		this.ip = Util.IPLOCAL;
 		this.puerto = puerto;
 	}
-
+	
+	public String getTipoPersistencia() {
+		return tipoPersistencia;
+	}
+	
 	// constructor para agregar contacto
 	public Usuario(String nickName, int puerto, String ip) {
 		super();
@@ -36,6 +41,13 @@ public class Usuario implements Serializable {
 		this.nickName = nickName;
 		this.puerto=0;
 		this.ip=null;
+	}
+	public Usuario(String nickName,String tipoPersistencia) {
+		super();
+		this.nickName = nickName;
+		this.puerto=0;
+		this.ip=null;
+		this.tipoPersistencia=tipoPersistencia;
 	}
 	public String getNickName() {
 		return nickName;

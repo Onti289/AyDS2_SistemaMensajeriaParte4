@@ -7,18 +7,25 @@ public class UsuarioDTO implements Serializable {
     private String nombre;
     private int puerto;
     private String ip;
-
-    /*
-     * public UsuarioDTO(String nombre, int puerto, String ip) { super();
-     * this.nombre = nombre; this.puerto = puerto; this.ip = ip; }
-     */
+    private String tipoPersistencia;
+    
     public UsuarioDTO(String nombre) {
         this.nombre = nombre;
         this.puerto = 0;
         this.ip = null;
     }
+    public UsuarioDTO(String nombre,String tipoPersistencia) {
+        this.nombre = nombre;
+        this.puerto = 0;
+        this.ip = null;
+        this.tipoPersistencia=tipoPersistencia;
+    }
+    
+    public String getTipoPersistencia() {
+		return tipoPersistencia;
+	}
 
-    public String getNombre() {
+	public String getNombre() {
         return nombre;
     }
 

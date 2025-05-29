@@ -36,5 +36,8 @@ public class Util {
     public static final String SOS_PRINCIPAL = "Sos principal";
     public static final String FIN_RESINCRONIZACION = "Fin de la resincronizacion";
     public static final String CONEXION_NUEVO_SERVER = "Me conecto a server nuevo";
+    public static final String JSON="JSON";
+    public static final String XML="XML";
+    public static final String TEXTO_PLANO="TEXTO PLANO";
 
 }

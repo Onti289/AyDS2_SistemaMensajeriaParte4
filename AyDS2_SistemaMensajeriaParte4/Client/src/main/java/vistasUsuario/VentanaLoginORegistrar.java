@@ -17,6 +17,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import java.awt.FlowLayout;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.SwingConstants;
 
 public class VentanaLoginORegistrar extends JFrame implements IVistaUsuario, ActionListener, KeyListener {
@@ -29,7 +30,8 @@ public class VentanaLoginORegistrar extends JFrame implements IVistaUsuario, Act
 	private ControladorUsuario controlador;
 	private JTextField textFieldUsuario;
 	private JButton boton;
-
+	private JComboBox<String> comboPersistencia;
+	private JLabel labelPersistencia;
 	/**
 	 * Launch the application.
 	 */
@@ -42,31 +44,42 @@ public class VentanaLoginORegistrar extends JFrame implements IVistaUsuario, Act
 		setTitle(titulo);
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 200, 213);
+		setBounds(100, 100, 250, 250);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		setContentPane(contentPane);
-		contentPane.setLayout(new GridLayout(2, 2, 0, 0));
+		contentPane.setLayout(new GridLayout(3,1));
 
-		JPanel panel_nickName = new JPanel();
+		JPanel panel_nickName = new JPanel(null);
 		contentPane.add(panel_nickName);
-		panel_nickName.setLayout(null);
+		
 
 		JLabel label_NickName = new JLabel("NickName:");
-		label_NickName.setHorizontalAlignment(SwingConstants.LEFT);
-		label_NickName.setBounds(10, 42, 86, 20);
+		
+		label_NickName.setBounds(10, 20, 80, 20);
 		panel_nickName.add(label_NickName);
 		
 		textFieldUsuario = new JTextField();
 		textFieldUsuario.addKeyListener(this);
-		textFieldUsuario.setBounds(90, 42, 80, 20);
+		textFieldUsuario.setBounds(100, 20, 100, 20);
 		panel_nickName.add(textFieldUsuario);
-		textFieldUsuario.setColumns(10);
 		
-		JPanel panel_Registrarse = new JPanel();
-		FlowLayout flowLayout = (FlowLayout) panel_Registrarse.getLayout();
-		flowLayout.setVgap(40);
+		// NUEVO: Panel para la persistencia (visible solo si es registro)
+				JPanel panelPersistencia = new JPanel(null);
+				if (nombreAccion.equalsIgnoreCase(Util.CTEREGISTRAR)) {
+					labelPersistencia = new JLabel("Persistencia:");
+					labelPersistencia.setBounds(10, 10, 100, 20);
+					panelPersistencia.add(labelPersistencia);
+
+					comboPersistencia = new JComboBox<>(new String[] { Util.XML,Util.JSON,Util.TEXTO_PLANO });
+					comboPersistencia.setBounds(100, 10, 100, 20);
+					panelPersistencia.add(comboPersistencia);
+
+					contentPane.add(panelPersistencia);
+				}
+		
+		JPanel panel_Registrarse = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 20));
 		contentPane.add(panel_Registrarse);
 		
 		this.boton = new JButton(nombreBoton);
@@ -75,13 +88,15 @@ public class VentanaLoginORegistrar extends JFrame implements IVistaUsuario, Act
 		this.boton.setActionCommand(nombreAccion);
 		panel_Registrarse.add(this.boton);
 	}
-	
+	public String getTipoPersistenciaSeleccionada() {
+		return comboPersistencia != null ? (String) comboPersistencia.getSelectedItem() : null;
+	}
 	// Lo de abajo posiblemente se borra
 	public String getUsuario() {
 		return textFieldUsuario.getText();
 	}
 
-
+	
 	public void vaciarTextFieldNickName() {
 		this.textFieldUsuario.setText("");
 	}

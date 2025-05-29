@@ -44,9 +44,9 @@ public class ControladorUsuario implements ActionListener, Observer {
 		this.ventana.setVisible(true);
 	}
 
-	public void setUser(String nickName, String tipo) {
+	public void setUser(String nickName,String tipoPersistencia, String tipoSolicitud) {
 
-		this.sistemaUsuario.enviaSolicitudAServidor(nickName, tipo);
+		this.sistemaUsuario.enviaSolicitudAServidor(nickName,tipoPersistencia, tipoSolicitud);
 	}
 
 	public String getNickNamePuerto() {
@@ -134,8 +134,9 @@ public class ControladorUsuario implements ActionListener, Observer {
 
 			if (this.ventana instanceof VentanaLoginORegistrar) {
 				VentanaLoginORegistrar ventanaRegistrarse = (VentanaLoginORegistrar) this.ventana;
+				String tipoPersistencia=ventanaRegistrarse.getTipoPersistenciaSeleccionada();
 				this.sistemaUsuario.estableceConexion(ventanaRegistrarse.getUsuario());
-				setUser(ventanaRegistrarse.getUsuario(), Util.CTEREGISTRAR);
+				setUser(ventanaRegistrarse.getUsuario(),tipoPersistencia, Util.CTEREGISTRAR);
 			}
 
 			break;
