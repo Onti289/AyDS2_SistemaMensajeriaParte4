@@ -143,7 +143,7 @@ public class SistemaUsuario extends Observable {
 	}
 
 	public void obtienePuertoServidor() {
-		try (Socket socket = new Socket(this.ip_monitor, this.puerto_Monitor)) {
+		try (Socket socket = new Socket(ip_monitor,puerto_Monitor)) {
 			ObjectOutputStream oosMonitor = null;
 			oosMonitor = new ObjectOutputStream(socket.getOutputStream());
 			ObjectInputStream oisMonitor = new ObjectInputStream(socket.getInputStream());
@@ -168,11 +168,12 @@ public class SistemaUsuario extends Observable {
 			socketServidor = new Socket(Util.IPLOCAL, this.puerto_servidor);
 			oos = new ObjectOutputStream(socketServidor.getOutputStream());
 			oos.flush();
+			ois = new ObjectInputStream(socketServidor.getInputStream());
+			/*
 			Solicitud sol = new Solicitud(new UsuarioDTO(nombreUser), Util.CONEXION_NUEVO_SERVER);
 			oos.writeObject(sol);
 			oos.flush();
-			ois = new ObjectInputStream(socketServidor.getInputStream());
-		
+			*/
 			Thread escuchaServidor = new Thread(() -> {
 				try {
 					while (true) {
@@ -232,7 +233,7 @@ public class SistemaUsuario extends Observable {
 				} catch (Exception e) {
 
 					this.puerto_servidor = -1;
-					estableceConexion(this.usuario.getNickName());
+					estableceConexion(nombreUser);
 					// e.printStackTrace(); // conexión caída
 				}
 			});
