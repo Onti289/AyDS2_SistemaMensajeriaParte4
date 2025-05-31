@@ -4,14 +4,13 @@ public class ConcreteFactoryJSON implements IAbstractFactoryPersistencia {
 
 	@Override
 	public IPersistenciaContacto crearPersistenciaContacto() {
-		// TODO Auto-generated method stub
-		return null;
+		return new ConcreteContactoJSON();
 	}
 
 	@Override
 	public IPersistenciaMensaje crearPersistenciaMensaje() {
 		// TODO Auto-generated method stub
-		return null;
+		return new ConcreteMensajeJSON();
 	}
 
 }

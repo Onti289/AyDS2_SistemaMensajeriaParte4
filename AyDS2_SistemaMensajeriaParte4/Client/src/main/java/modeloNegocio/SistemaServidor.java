@@ -119,6 +119,9 @@ public class SistemaServidor {
 
 									case Util.CTEREGISTRAR:
 										UsuarioDTO usuarioReg = solicitud.getUsuarioDTO();
+										System.out.println("Tipo de persistencia"+usuarioReg.getTipoPersistencia());
+										System.out.println("Usuario que llega a reg"+usuarioReg.getNombre());
+										
 										if (registrarUsuario(usuarioReg)) {
 											solicitud.setTipoSolicitud(Util.CTEREGISTRO);
 											/*String clave = usuarioReg.getNombre();
@@ -171,11 +174,14 @@ public class SistemaServidor {
 										this.principal = true;
 										break;
 									case Util.CONEXION_NUEVO_SERVER:
+										System.out.println("NOMBRE "+solicitud.getUsuarioDTO().getNombre());
 										String clave = solicitud.getUsuarioDTO().getNombre();
+										System.out.println("CLAVE "+clave);
 										ConexionUsuario conexion = new ConexionUsuario(solicitud.getUsuarioDTO(), oos,
 												ois, clienteSocket);
-										conexionesUsuarios.put(clave, conexion);
+										conexionesUsuarios.put(clave, conexion);	
 										oos.writeObject(Util.CONEXION_NUEVO_SERVER);
+										oos.flush();
 										break;
 									default:
 										break;
@@ -201,7 +207,8 @@ public class SistemaServidor {
 
 						} catch (Exception e) {
 							try {
-
+								System.out.println("7777");
+								e.printStackTrace();
 								quitarUsuarioDesconectado(eliminaConexion(clienteSocket));
 								clienteSocket.close();
 							} catch (IOException e1) {
@@ -509,17 +516,15 @@ public class SistemaServidor {
 				e.printStackTrace();
 			}
 		}
-
 	}
 
 	private void enviarMensaje(Mensaje mensaje) {
 		ObjectOutputStream oosReceptor;
-		System.out.println("DAtos de conexion");
+
 		ConexionUsuario conexionUsuario = null;
 
 		for (Map.Entry<String, ConexionUsuario> entry : conexionesUsuarios.entrySet()) {
 			String clave = entry.getKey();
-			System.out.println("clavee " + clave);
 			ConexionUsuario conexion = entry.getValue();
 			if (clave.equalsIgnoreCase(mensaje.getReceptor().getNickName())) {
 				conexionUsuario = conexion;

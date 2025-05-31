@@ -165,19 +165,27 @@ public class SistemaUsuario extends Observable {
 
 	public void comunicacionServidor(String nombreUser) {
 		try {
+			System.out.println("Puerto de servidor obtenido"+this.puerto_servidor);
 			socketServidor = new Socket(Util.IPLOCAL, this.puerto_servidor);
 			oos = new ObjectOutputStream(socketServidor.getOutputStream());
-			oos.flush();
 			ois = new ObjectInputStream(socketServidor.getInputStream());
-			/*
+			oos.flush();
+			System.out.println("Llego bien nonmbre Usert"+nombreUser);
 			Solicitud sol = new Solicitud(new UsuarioDTO(nombreUser), Util.CONEXION_NUEVO_SERVER);
 			oos.writeObject(sol);
 			oos.flush();
-			*/
+			try {
+				Object mensajeOk = ois.readObject();
+				System.out.println("Llego msj de OK "+(String)mensajeOk);
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} 
 			Thread escuchaServidor = new Thread(() -> {
 				try {
 					while (true) {
 						Object recibido = ois.readObject();
+						System.out.println("Tercero "+ois);
 						if (recibido instanceof Mensaje) {
 							Mensaje mensaje = (Mensaje) recibido;
 
@@ -231,15 +239,17 @@ public class SistemaUsuario extends Observable {
 						}
 					}
 				} catch (Exception e) {
-
+					e.printStackTrace(); // conexión caída
 					this.puerto_servidor = -1;
+					System.out.println("Llego aca 22");
 					estableceConexion(nombreUser);
-					// e.printStackTrace(); // conexión caída
+					 
 				}
 			});
 			escuchaServidor.start();
 
 		} catch (IOException e) {
+			System.out.println("Llego aca 33");
 			e.printStackTrace();
 		}
 	}

@@ -159,7 +159,9 @@ public class Usuario implements Serializable {
 	}
 
 	public void agregaContacto(Usuario contacto) {
+		System.out.println("Contacto persistencia "+this.contactoPersistencia);
 		agenda.add(contacto);
+		
 		this.contactoPersistencia.guardarContacto(this.nickName,contacto.getNickName());
 	}
 

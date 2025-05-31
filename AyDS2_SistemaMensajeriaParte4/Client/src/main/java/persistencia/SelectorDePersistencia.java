@@ -4,7 +4,7 @@ import util.Util;
 
 public class SelectorDePersistencia {
     public static IAbstractFactoryPersistencia getFabrica(String tipo) {
-        switch (tipo.toLowerCase()) {
+        switch (tipo) {
             case Util.XML:
                 return new ConcreteFactoryXML();
             case Util.JSON:
