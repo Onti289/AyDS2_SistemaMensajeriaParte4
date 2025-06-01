@@ -19,8 +19,9 @@ public class Usuario implements Serializable {
 	private transient List<Usuario> listaConversaciones = new LinkedList<>();
 
 	private transient ArrayList<Mensaje> mensajes = new ArrayList<>();
-	private IPersistenciaContacto contactoPersistencia;
-	private IPersistenciaMensaje mensajePersistencia;
+	private transient IPersistenciaContacto contactoPersistencia;
+	private transient IPersistenciaMensaje mensajePersistencia;
+
 	// constructor para usuario main
 	public Usuario(String nickName, int puerto) {
 		super();
@@ -28,11 +29,11 @@ public class Usuario implements Serializable {
 		this.ip = Util.IPLOCAL;
 		this.puerto = puerto;
 	}
-	
+
 	public String getTipoPersistencia() {
 		return tipoPersistencia;
 	}
-	
+
 	// constructor para agregar contacto
 	public Usuario(String nickName, int puerto, String ip) {
 		super();
@@ -40,22 +41,25 @@ public class Usuario implements Serializable {
 		this.ip = ip;
 		this.puerto = puerto;
 	}
+
 	public Usuario(String nickName) {
 		super();
 		this.nickName = nickName;
-		this.puerto=0;
-		this.ip=null;
+		this.puerto = 0;
+		this.ip = null;
 	}
-	public Usuario(String nickName,String tipoPersistencia) {
+
+	public Usuario(String nickName, String tipoPersistencia) {
 		super();
 		this.nickName = nickName;
-		this.puerto=0;
-		this.ip=null;
-		this.tipoPersistencia=tipoPersistencia;
-		IAbstractFactoryPersistencia fabricaPersistencia=SelectorDePersistencia.getFabrica(tipoPersistencia);
-		this.contactoPersistencia=fabricaPersistencia.crearPersistenciaContacto();
-		this.mensajePersistencia=fabricaPersistencia.crearPersistenciaMensaje();
+		this.puerto = 0;
+		this.ip = null;
+		this.tipoPersistencia = tipoPersistencia;
+		IAbstractFactoryPersistencia fabricaPersistencia = SelectorDePersistencia.getFabrica(tipoPersistencia);
+		this.contactoPersistencia = fabricaPersistencia.crearPersistenciaContacto();
+		this.mensajePersistencia = fabricaPersistencia.crearPersistenciaMensaje();
 	}
+
 	public String getNickName() {
 		return nickName;
 	}
@@ -87,7 +91,7 @@ public class Usuario implements Serializable {
 
 	public void guardarMensaje(Mensaje msg) {
 		this.mensajes.add(msg);
-		this.mensajePersistencia.guardarMensaje(this.nickName,msg);
+		this.mensajePersistencia.guardarMensaje(this.nickName, msg);
 	}
 
 	public void recibirMensaje(Mensaje m) {
@@ -127,11 +131,11 @@ public class Usuario implements Serializable {
 			boolean otroEsReceptor = m.getReceptor().getNickName().equalsIgnoreCase(nickname);
 			// Ya que no pueden ambos ser emisores o receptores
 			if ((yoSoyEmisor && otroEsReceptor) || (yoSoyReceptor && otroEsEmisor)) {
-				String nombre=m.getEmisor().getNickName();
-				UsuarioDTO emisor=new UsuarioDTO(nombre);
-				nombre=m.getReceptor().getNickName();
-				UsuarioDTO receptor=new UsuarioDTO(nombre);
-				chat.add(new MensajeDTO(m.getContenido(), m.getFechayhora(),emisor,receptor));
+				String nombre = m.getEmisor().getNickName();
+				UsuarioDTO emisor = new UsuarioDTO(nombre);
+				nombre = m.getReceptor().getNickName();
+				UsuarioDTO receptor = new UsuarioDTO(nombre);
+				chat.add(new MensajeDTO(m.getContenido(), m.getFechayhora(), emisor, receptor));
 			}
 		}
 		return chat;
@@ -159,10 +163,10 @@ public class Usuario implements Serializable {
 	}
 
 	public void agregaContacto(Usuario contacto) {
-		System.out.println("Contacto persistencia "+this.contactoPersistencia);
+		System.out.println("Contacto persistencia " + this.contactoPersistencia);
 		agenda.add(contacto);
-		
-		this.contactoPersistencia.guardarContacto(this.nickName,contacto.getNickName());
+
+		this.contactoPersistencia.guardarContacto(this.nickName, contacto.getNickName());
 	}
 
 	public void muestraContactos() {
@@ -198,7 +202,7 @@ public class Usuario implements Serializable {
 	}
 
 	public void CargaMensajesContactos() {
-		this.agenda=this.contactoPersistencia.cargarContacto(this.nickName);
-		this.mensajes=this.mensajePersistencia.cargarMensaje(this.nickName);
+		this.agenda = this.contactoPersistencia.cargarContacto(this.nickName);
+		this.mensajes = this.mensajePersistencia.cargarMensaje(this.nickName);
 	}
 }

@@ -123,11 +123,7 @@ public class SistemaServidor {
 										System.out.println("Usuario que llega a reg"+usuarioReg.getNombre());
 										
 										if (registrarUsuario(usuarioReg)) {
-											solicitud.setTipoSolicitud(Util.CTEREGISTRO);
-											/*String clave = usuarioReg.getNombre();
-											ConexionUsuario conexion = new ConexionUsuario(usuarioReg, oos, ois,
-													clienteSocket);
-											conexionesUsuarios.put(clave, conexion);*/
+											solicitud.setTipoSolicitud(Util.CTEREGISTRO);	
 											principalSincronizaSecundario(solicitud);
 										} else {
 											solicitud.setTipoSolicitud(Util.CTEUSUARIOLOGUEADO);
@@ -143,10 +139,6 @@ public class SistemaServidor {
 										if (tipo == 1) {
 											solicitud.setTipoSolicitud(Util.CTELOGIN);
 											String tipoPersistencia=buscaTipoPersistenciaUsuario(usuarioLogin);
-											/*String clave = usuarioLogin.getNombre();
-											ConexionUsuario conexion = new ConexionUsuario(usuarioLogin, oos, ois,
-													clienteSocket);
-											conexionesUsuarios.put(clave, conexion);*/
 											this.listaConectados.add(new Usuario(usuarioLogin.getNombre()));
 											solicitud.getUsuarioDTO().setTipoPersistencia(tipoPersistencia);
 											principalSincronizaSecundario(solicitud);
@@ -188,7 +180,7 @@ public class SistemaServidor {
 									}
 								} else if (recibido instanceof Mensaje) {
 									Mensaje mensaje = (Mensaje) recibido;
-
+									System.out.println("hghf");
 									enviarMensaje(mensaje);
 								} else if (recibido instanceof ServidorDTO) {// RESINCRONIZA el serverdto que le llega
 																				// es del secundario

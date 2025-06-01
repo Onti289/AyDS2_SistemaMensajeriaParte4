@@ -1,0 +1,13 @@
+<java.util.PriorityQueue serialization="custom">
+  <unserializable-parents/>
+  <java.util.PriorityQueue>
+    <default>
+      <size>1</size>
+    </default>
+    <int>2</int>
+    <modeloNegocio.Usuario>
+      <nickName>3</nickName>
+      <puerto>0</puerto>
+    </modeloNegocio.Usuario>
+  </java.util.PriorityQueue>
+</java.util.PriorityQueue>

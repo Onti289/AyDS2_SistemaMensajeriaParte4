@@ -4,14 +4,12 @@ public class ConcreteFactoryXML implements IAbstractFactoryPersistencia{
 
 	@Override
 	public IPersistenciaContacto crearPersistenciaContacto() {
-		
-		return null;
+		return new ConcreteContactoXML();
 	}
 
 	@Override
 	public IPersistenciaMensaje crearPersistenciaMensaje() {
-		
-		return null;
+		return new ConcreteMensajeJSON();
 	}
 
 }
