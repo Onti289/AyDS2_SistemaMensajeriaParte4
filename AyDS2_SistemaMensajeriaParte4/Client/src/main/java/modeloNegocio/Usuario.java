@@ -58,6 +58,7 @@ public class Usuario implements Serializable {
 		IAbstractFactoryPersistencia fabricaPersistencia = SelectorDePersistencia.getFabrica(tipoPersistencia);
 		this.contactoPersistencia = fabricaPersistencia.crearPersistenciaContacto();
 		this.mensajePersistencia = fabricaPersistencia.crearPersistenciaMensaje();
+		System.out.println(this.mensajePersistencia + " Constructor mensaje");
 	}
 
 	public String getNickName() {

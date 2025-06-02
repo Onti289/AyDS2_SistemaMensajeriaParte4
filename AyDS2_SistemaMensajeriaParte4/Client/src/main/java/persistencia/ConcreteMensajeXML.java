@@ -11,14 +11,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class ConcreteMensajeXML extends ConcreteFactoryXML implements IPersistenciaMensaje {
-	private final String carpeta = "MensajesDe";
+	//private final String carpeta = "Mensajes De";
 
 	public ConcreteMensajeXML() {
 		// Crea la carpeta si no existe
-		File dir = new File(carpeta);
+		/*File dir = new File(carpeta);
 		if (!dir.exists()) {
 			dir.mkdir();
-		}
+		}*/
 	}
 
 	@Override
@@ -29,7 +29,7 @@ public class ConcreteMensajeXML extends ConcreteFactoryXML implements IPersisten
 	        XStream xstream = new XStream(new StaxDriver());
 	        xstream.allowTypes(new Class[] { Mensaje.class, ArrayList.class });
 
-	        try (FileWriter writer = new FileWriter(carpeta+ nombre + ".xml")) {
+	        try (FileWriter writer = new FileWriter("ConversacionesDe"+ nombre + ".xml")) {
 	            xstream.toXML(mensajes, writer);
 	        } catch (IOException e) {
 	            e.printStackTrace();
@@ -39,7 +39,7 @@ public class ConcreteMensajeXML extends ConcreteFactoryXML implements IPersisten
 
 	@Override
 	public ArrayList<Mensaje> cargarMensaje(String nombre) {
-		File archivo = new File(carpeta+ nombre + ".xml");
+		File archivo = new File("ConversacionesDe"+ nombre + ".xml");
         if (!archivo.exists()) {
             return new ArrayList<>(); // Si no hay archivo, retorna lista vacía
         }

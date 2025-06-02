@@ -9,7 +9,7 @@ public class ConcreteFactoryXML implements IAbstractFactoryPersistencia{
 
 	@Override
 	public IPersistenciaMensaje crearPersistenciaMensaje() {
-		return new ConcreteMensajeJSON();
+		return new ConcreteMensajeXML();
 	}
 
 }
