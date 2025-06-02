@@ -32,6 +32,8 @@ public class VentanaLoginORegistrar extends JFrame implements IVistaUsuario, Act
 	private JButton boton;
 	private JComboBox<String> comboPersistencia;
 	private JLabel labelPersistencia;
+	private JComboBox<String> comboEncriptacion;
+	private JLabel labelEncriptacion;
 	/**
 	 * Launch the application.
 	 */
@@ -75,7 +77,14 @@ public class VentanaLoginORegistrar extends JFrame implements IVistaUsuario, Act
 					comboPersistencia = new JComboBox<>(new String[] { Util.XML,Util.JSON,Util.TEXTO_PLANO });
 					comboPersistencia.setBounds(100, 10, 100, 20);
 					panelPersistencia.add(comboPersistencia);
+					 // Encriptación
+				    labelEncriptacion = new JLabel("Encriptación:");
+				    labelEncriptacion.setBounds(10, 40, 100, 20);
+				    panelPersistencia.add(labelEncriptacion);
 
+				    comboEncriptacion = new JComboBox<>(new String[] { "AES", "XOR" });
+				    comboEncriptacion.setBounds(100, 40, 100, 20);
+				    panelPersistencia.add(comboEncriptacion);
 					contentPane.add(panelPersistencia);
 				}
 		
@@ -88,6 +97,10 @@ public class VentanaLoginORegistrar extends JFrame implements IVistaUsuario, Act
 		this.boton.setActionCommand(nombreAccion);
 		panel_Registrarse.add(this.boton);
 	}
+	public String getTipoEncriptacionSeleccionada() {
+	    return comboEncriptacion != null ? (String) comboEncriptacion.getSelectedItem() : null;
+	}
+
 	public String getTipoPersistenciaSeleccionada() {
 		return comboPersistencia != null ? (String) comboPersistencia.getSelectedItem() : null;
 	}

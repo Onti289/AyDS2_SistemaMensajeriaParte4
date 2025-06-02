@@ -16,6 +16,7 @@ public class Usuario implements Serializable {
 	private int puerto;
 	private transient PriorityQueue<Usuario> agenda = new PriorityQueue<>(Comparator.comparing(Usuario::getNickName));
 	private String tipoPersistencia;
+	private String tipoEncriptacion;
 	private transient List<Usuario> listaConversaciones = new LinkedList<>();
 
 	private transient ArrayList<Mensaje> mensajes = new ArrayList<>();
@@ -28,10 +29,6 @@ public class Usuario implements Serializable {
 		this.nickName = nickName;
 		this.ip = Util.IPLOCAL;
 		this.puerto = puerto;
-	}
-
-	public String getTipoPersistencia() {
-		return tipoPersistencia;
 	}
 
 	// constructor para agregar contacto
@@ -49,7 +46,7 @@ public class Usuario implements Serializable {
 		this.ip = null;
 	}
 
-	public Usuario(String nickName, String tipoPersistencia) {
+	public Usuario(String nickName, String tipoPersistencia,String tipoEncriptacion) {
 		super();
 		this.nickName = nickName;
 		this.puerto = 0;
@@ -58,9 +55,9 @@ public class Usuario implements Serializable {
 		IAbstractFactoryPersistencia fabricaPersistencia = SelectorDePersistencia.getFabrica(tipoPersistencia);
 		this.contactoPersistencia = fabricaPersistencia.crearPersistenciaContacto();
 		this.mensajePersistencia = fabricaPersistencia.crearPersistenciaMensaje();
-		System.out.println(this.mensajePersistencia + " Constructor mensaje");
+		this.tipoEncriptacion=tipoEncriptacion;
 	}
-
+	
 	public String getNickName() {
 		return nickName;
 	}
@@ -83,6 +80,14 @@ public class Usuario implements Serializable {
 
 	public void setPuerto(int puerto) {
 		this.puerto = puerto;
+	}
+	
+	public String getTipoPersistencia() {
+		return tipoPersistencia;
+	}
+	
+	public String getTipoEncriptacion() {
+		return tipoEncriptacion;
 	}
 
 	@Override

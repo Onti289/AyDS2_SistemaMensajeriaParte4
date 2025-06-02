@@ -79,7 +79,7 @@ public class SistemaUsuario extends Observable {
 	public void pedirListaUsuarios() {
 		try {
 
-			Solicitud solicitud = new Solicitud(new UsuarioDTO(this.getnickName(),this.usuario.getTipoPersistencia()), Util.SOLICITA_LISTA_USUARIO);
+			Solicitud solicitud = new Solicitud(new UsuarioDTO(this.getnickName()), Util.SOLICITA_LISTA_USUARIO);
 			oos.writeObject(solicitud);
 			oos.flush();
 		} catch (IOException e) {
@@ -87,9 +87,8 @@ public class SistemaUsuario extends Observable {
 		}
 	}
 
-	public void setUsuario(String nickname,String tipoPersistencia) {
-		this.usuario = new Usuario(nickname,tipoPersistencia);
-		
+	public void setUsuario(String nickname, String tipoPersistencia, String tipoEncriptacion) {
+		this.usuario = new Usuario(nickname, tipoPersistencia, tipoEncriptacion);
 	}
 
 	public boolean existeContactoPorNombre(PriorityQueue<Usuario> lista, String nombreBuscado) {
@@ -143,7 +142,7 @@ public class SistemaUsuario extends Observable {
 	}
 
 	public void obtienePuertoServidor() {
-		try (Socket socket = new Socket(ip_monitor,puerto_Monitor)) {
+		try (Socket socket = new Socket(ip_monitor, puerto_Monitor)) {
 			ObjectOutputStream oosMonitor = null;
 			oosMonitor = new ObjectOutputStream(socket.getOutputStream());
 			ObjectInputStream oisMonitor = new ObjectInputStream(socket.getInputStream());
@@ -165,27 +164,27 @@ public class SistemaUsuario extends Observable {
 
 	public void comunicacionServidor(String nombreUser) {
 		try {
-			System.out.println("Puerto de servidor obtenido"+this.puerto_servidor);
+			System.out.println("Puerto de servidor obtenido" + this.puerto_servidor);
 			socketServidor = new Socket(Util.IPLOCAL, this.puerto_servidor);
 			oos = new ObjectOutputStream(socketServidor.getOutputStream());
 			ois = new ObjectInputStream(socketServidor.getInputStream());
 			oos.flush();
-			System.out.println("Llego bien nonmbre Usert"+nombreUser);
+			System.out.println("Llego bien nonmbre Usert" + nombreUser);
 			Solicitud sol = new Solicitud(new UsuarioDTO(nombreUser), Util.CONEXION_NUEVO_SERVER);
 			oos.writeObject(sol);
 			oos.flush();
 			try {
 				Object mensajeOk = ois.readObject();
-				System.out.println("Llego msj de OK "+(String)mensajeOk);
+				System.out.println("Llego msj de OK " + (String) mensajeOk);
 			} catch (ClassNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			} 
+			}
 			Thread escuchaServidor = new Thread(() -> {
 				try {
 					while (true) {
 						Object recibido = ois.readObject();
-						System.out.println("Tercero "+ois);
+						System.out.println("Tercero " + ois);
 						if (recibido instanceof Mensaje) {
 							Mensaje mensaje = (Mensaje) recibido;
 
@@ -202,7 +201,8 @@ public class SistemaUsuario extends Observable {
 								// usuario
 								if (solicitud.getTipoSolicitud().equalsIgnoreCase(Util.CTEREGISTRO)
 										|| solicitud.getTipoSolicitud().equalsIgnoreCase(Util.CTELOGIN)) {
-									setUsuario(solicitud.getNombre(),solicitud.getUsuarioDTO().getTipoPersistencia());
+									setUsuario(solicitud.getNombre(), solicitud.getUsuarioDTO().getTipoPersistencia(),
+											solicitud.getUsuarioDTO().getTipoEncriptacion());
 								}
 								setChanged(); // importante
 								notifyObservers(solicitud);
@@ -243,7 +243,7 @@ public class SistemaUsuario extends Observable {
 					this.puerto_servidor = -1;
 					System.out.println("Llego aca 22");
 					estableceConexion(nombreUser);
-					 
+
 				}
 			});
 			escuchaServidor.start();
@@ -273,10 +273,6 @@ public class SistemaUsuario extends Observable {
 		} catch (IOException e) {
 
 		}
-	}
-
-	private String getIp() {
-		return this.usuario.getIp();
 	}
 
 	public Usuario buscarUsuarioPorDTO(UsuarioDTO dto) {
@@ -311,11 +307,13 @@ public class SistemaUsuario extends Observable {
 		}
 	}
 
-	public void enviaSolicitudAServidor(String nickName,String tipoPersistencia, String tipoSolicitud) {
+	public void enviaSolicitudAServidor(String nickName, String tipoPersistencia, String tipoEncriptacion,
+			String tipoSolicitud) {
 
 		try {
 			if (this.puerto_servidor != -1) {
-				Solicitud soli = new Solicitud(new UsuarioDTO(nickName,tipoPersistencia),tipoSolicitud);
+				Solicitud soli = new Solicitud(new UsuarioDTO(nickName, tipoPersistencia, tipoEncriptacion),
+						tipoSolicitud);
 				oos.writeObject(soli);
 				oos.flush();
 			}

@@ -44,9 +44,9 @@ public class ControladorUsuario implements ActionListener, Observer {
 		this.ventana.setVisible(true);
 	}
 
-	public void setUser(String nickName,String tipoPersistencia, String tipoSolicitud) {
+	public void setUser(String nickName,String tipoPersistencia,String tipoEncriptacion, String tipoSolicitud) {
 
-		this.sistemaUsuario.enviaSolicitudAServidor(nickName,tipoPersistencia, tipoSolicitud);
+		this.sistemaUsuario.enviaSolicitudAServidor(nickName,tipoPersistencia,tipoEncriptacion, tipoSolicitud);
 	}
 	
 	public String getNickNamePuerto() {
@@ -135,8 +135,9 @@ public class ControladorUsuario implements ActionListener, Observer {
 			if (this.ventana instanceof VentanaLoginORegistrar) {
 				VentanaLoginORegistrar ventanaRegistrarse = (VentanaLoginORegistrar) this.ventana;
 				String tipoPersistencia=ventanaRegistrarse.getTipoPersistenciaSeleccionada();
+				String tipoEncriptacion=ventanaRegistrarse.getTipoEncriptacionSeleccionada();
 				this.sistemaUsuario.estableceConexion(ventanaRegistrarse.getUsuario());
-				setUser(ventanaRegistrarse.getUsuario(),tipoPersistencia, Util.CTEREGISTRAR);
+				setUser(ventanaRegistrarse.getUsuario(),tipoPersistencia,tipoEncriptacion, Util.CTEREGISTRAR);
 			}
 
 			break;
@@ -147,7 +148,7 @@ public class ControladorUsuario implements ActionListener, Observer {
 				VentanaLoginORegistrar ventanaLogin = (VentanaLoginORegistrar) this.ventana;
 				this.sistemaUsuario.estableceConexion(ventanaLogin.getUsuario());
 				
-				setUser(ventanaLogin.getUsuario(),"", Util.CTELOGIN); // le mandamos tipoPersistencia vacio ya que el que se encarga de chequear que tipo
+				setUser(ventanaLogin.getUsuario(),"","", Util.CTELOGIN); // le mandamos tipoPersistencia vacio ya que el que se encarga de chequear que tipo
 			}														//de persistencia tiene es el servidor
 
 			break;
@@ -260,7 +261,7 @@ public class ControladorUsuario implements ActionListener, Observer {
 					this.setVentana(new VentanaPrincipal(this));
 					((VentanaPrincipal) ventana).TitulonameUsuario(solicitud.getNombre());
 					this.sistemaUsuario.getUsuario().CargaMensajesContactos();
-					this.sistemaUsuario.enviaSolicitudAServidor(solicitud.getNombre(),"",Util.CTESOLICITARMENSAJES);
+					this.sistemaUsuario.enviaSolicitudAServidor(solicitud.getNombre(),"","",Util.CTESOLICITARMENSAJES);
 				} else { // no se pudo ni registrar ni loguear
 					if (solicitud.getTipoSolicitud().equalsIgnoreCase(Util.CTEUSUARIOLOGUEADO)) {
 						((VentanaLoginORegistrar) ventana).mostrarErrorUsuarioYaLogueado();

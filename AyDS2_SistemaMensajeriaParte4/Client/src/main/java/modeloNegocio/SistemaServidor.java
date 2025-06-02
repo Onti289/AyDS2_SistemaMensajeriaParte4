@@ -119,9 +119,9 @@ public class SistemaServidor {
 
 									case Util.CTEREGISTRAR:
 										UsuarioDTO usuarioReg = solicitud.getUsuarioDTO();
-										System.out.println("Tipo de persistencia"+usuarioReg.getTipoPersistencia());
-										System.out.println("Usuario que llega a reg"+usuarioReg.getNombre());
-										
+										System.out.println("Tipo de persistencia "+usuarioReg.getTipoPersistencia());
+										System.out.println("Usuario que llega a reg "+usuarioReg.getNombre());
+										System.out.println("Tipo de encriptacion "+usuarioReg.getTipoEncriptacion());
 										if (registrarUsuario(usuarioReg)) {
 											solicitud.setTipoSolicitud(Util.CTEREGISTRO);	
 											principalSincronizaSecundario(solicitud);
@@ -138,9 +138,10 @@ public class SistemaServidor {
 
 										if (tipo == 1) {
 											solicitud.setTipoSolicitud(Util.CTELOGIN);
-											String tipoPersistencia=buscaTipoPersistenciaUsuario(usuarioLogin);
+											Usuario usuario=buscayObtieneUsuario(usuarioLogin);
 											this.listaConectados.add(new Usuario(usuarioLogin.getNombre()));
-											solicitud.getUsuarioDTO().setTipoPersistencia(tipoPersistencia);
+											solicitud.getUsuarioDTO().setTipoPersistencia(usuario.getTipoPersistencia());
+											solicitud.getUsuarioDTO().setTipoEncriptacion(usuario.getTipoEncriptacion());
 											principalSincronizaSecundario(solicitud);
 										} else if (tipo == 2) {
 											solicitud.setTipoSolicitud(Util.CTEUSUARIOLOGUEADO);
@@ -221,11 +222,11 @@ public class SistemaServidor {
 		serverThread.start();
 	}
 
-	private String buscaTipoPersistenciaUsuario(UsuarioDTO usuarioLogin) {
+	private Usuario buscayObtieneUsuario(UsuarioDTO usuarioLogin) {
 		String nombre = usuarioLogin.getNombre();
 		for (Usuario u : listaUsuarios) {
 			if (u.getNickName().equalsIgnoreCase(nombre)) {
-				return u.getTipoPersistencia();
+				return u;
 			}
 		}
 		return null;
@@ -607,7 +608,7 @@ public class SistemaServidor {
 	public boolean registrarUsuario(UsuarioDTO usuariodto) {
 		boolean registro = true;
 		if (!existeUsuarioPorNombre(usuariodto.getNombre())) {
-			Usuario usuario = new Usuario(usuariodto.getNombre(),usuariodto.getTipoPersistencia());
+			Usuario usuario = new Usuario(usuariodto.getNombre(),usuariodto.getTipoPersistencia(),usuariodto.getTipoEncriptacion());
 			this.listaUsuarios.add(usuario);
 			this.listaConectados.add(usuario);
 		} else {
