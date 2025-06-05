@@ -20,8 +20,6 @@ public class ConcreteMensajeTextoPlano extends ConcreteFactoryTextoPlano impleme
 	
 	@Override
 	public void guardarMensaje(String nombre,Mensaje mensaje) {
-            /*ArrayList<Mensaje> mensajes = cargarMensaje(nombre); // Lee los anteriores
-	    mensajes.add(mensaje);*/
 	    try (Writer writer = new FileWriter("ConversacionesDe" + nombre + ".txt", true)) {
 	      if (mensaje.getEmisor().getNickName().equalsIgnoreCase(nombre))
               {
@@ -33,7 +31,6 @@ public class ConcreteMensajeTextoPlano extends ConcreteFactoryTextoPlano impleme
                 writer.append("Recepcion\n");
                 writer.append(mensaje.getEmisor().getNickName() + "\n");
               }
-	      
 	        writer.append(mensaje.getFechayhora().format(this.formatter) + "\n");
             writer.append(mensaje.getContenido() + "\n");
 	              
@@ -49,9 +46,10 @@ public class ConcreteMensajeTextoPlano extends ConcreteFactoryTextoPlano impleme
 
 	            try (BufferedReader br = new BufferedReader(new FileReader("ConversacionesDe" + nombre + ".txt"))) {
 	                String linea;
+	                System.out.println("CARGANDO MENSAJES...");
 	                while ((linea = br.readLine()) != null) {
                             Usuario emisor, receptor;
-                            if (linea.equalsIgnoreCase("Envio\n"))
+                            if (linea.equalsIgnoreCase("Envio"))
 	                    {
 	                        linea = br.readLine();
                               emisor = new Usuario(nombre);
@@ -66,8 +64,10 @@ public class ConcreteMensajeTextoPlano extends ConcreteFactoryTextoPlano impleme
 	                    linea = br.readLine();
 	                    LocalDateTime fechaHora = LocalDateTime.parse(linea, this.formatter);
 	                    linea = br.readLine();
-                            String contenido = linea;
-                            mensajes.add(new Mensaje(contenido, fechaHora, emisor, receptor));
+	                    System.out.println("emisor "+emisor.getNickName());
+	                    System.out.println("receptor "+receptor.getNickName());
+                        String contenido = linea;
+                        mensajes.add(new Mensaje(contenido, fechaHora, emisor, receptor));
                         }
 	                } catch (IOException e) {
                         }

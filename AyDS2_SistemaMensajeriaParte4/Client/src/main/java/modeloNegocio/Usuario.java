@@ -210,5 +210,22 @@ public class Usuario implements Serializable {
 	public void CargaMensajesContactos() {
 		this.agenda = this.contactoPersistencia.cargarContacto(this.nickName);
 		this.mensajes = this.mensajePersistencia.cargarMensaje(this.nickName);
+		CargaMensajesEnconversarion();
+	}
+
+	private void CargaMensajesEnconversarion() {
+		
+		for(Mensaje m: this.mensajes) {
+			if(m.getEmisor().getNickName().equalsIgnoreCase(nickName)) {
+				System.out.println("Nombre del contacto"+m.getReceptor().nickName);
+				agregarConversacion(m.getReceptor());
+			}
+			else {
+				System.out.println("Nombre del contacto"+m.getEmisor().nickName);
+				agregarConversacion(m.getEmisor());
+			}
+				
+		}
+		
 	}
 }

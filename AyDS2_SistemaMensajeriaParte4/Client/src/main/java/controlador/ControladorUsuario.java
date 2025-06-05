@@ -276,11 +276,9 @@ public class ControladorUsuario implements ActionListener, Observer {
 					System.out.println("5");
 					RespuestaListaMensajes respuesta = (RespuestaListaMensajes) arg;
 					List<MensajeDTO> lista = respuesta.getLista();
-
+					((VentanaPrincipal) ventana).actualizarListaChats(this.getListaConversaciones());
 					for (Object obj : lista) {
-						System.out.println("6 ");
 						MensajeDTO m = (MensajeDTO) obj;
-						((VentanaPrincipal) ventana).actualizarListaChats(this.getListaConversaciones());
 						((VentanaPrincipal) ventana).notificarNuevoMensaje(m.getEmisor());
 					}
 				} else {

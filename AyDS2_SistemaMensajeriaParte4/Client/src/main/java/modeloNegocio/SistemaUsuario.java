@@ -127,7 +127,9 @@ public class SistemaUsuario extends Observable {
 			this.usuario.agregarConversacion(contacto);
 		}
 	}
-
+	public void agregarConversacion(Usuario contacto) {
+		this.usuario.agregarConversacion(contacto);
+	}
 	public void estableceConexion(String usuario) {
 		cerrarConexionAnterior();
 		obtienePuertoServidor();
@@ -221,7 +223,13 @@ public class SistemaUsuario extends Observable {
 										ip = m.getReceptor().getIp();
 										Usuario receptor = new Usuario(nick, puertoaux, ip);
 										this.usuario.recibirMensaje(
-												new Mensaje(m.getContenido(), m.getFechayhora(), emisor, receptor));
+												new Mensaje(m.getContenido(), m.getFechayhora(), emisor, receptor));										
+										if(m.getEmisor().getNombre().equalsIgnoreCase(getnickName())) {			
+											agregarConversacion(new Usuario(m.getReceptor().getNombre()));
+										}
+										else {
+											agregarConversacion(new Usuario(m.getEmisor().getNombre()));
+										}	
 									}
 									setChanged(); // importante
 									notifyObservers(respuesta);
