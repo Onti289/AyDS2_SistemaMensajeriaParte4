@@ -16,7 +16,8 @@ import modeloNegocio.Mensaje;
 import modeloNegocio.Usuario;
 
 public class ConcreteMensajeTextoPlano extends ConcreteFactoryTextoPlano implements IPersistenciaMensaje {
-
+	private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+	
 	@Override
 	public void guardarMensaje(String nombre,Mensaje mensaje) {
             /*ArrayList<Mensaje> mensajes = cargarMensaje(nombre); // Lee los anteriores
@@ -32,8 +33,9 @@ public class ConcreteMensajeTextoPlano extends ConcreteFactoryTextoPlano impleme
                 writer.append("Recepcion\n");
                 writer.append(mensaje.getEmisor().getNickName() + "\n");
               }
-	        writer.append(mensaje.getFechayhora().toString() + "\n");
-                writer.append(mensaje.getContenido() + "\n");
+	      
+	        writer.append(mensaje.getFechayhora().format(this.formatter) + "\n");
+            writer.append(mensaje.getContenido() + "\n");
 	              
             }
             catch (IOException e) {
@@ -62,8 +64,7 @@ public class ConcreteMensajeTextoPlano extends ConcreteFactoryTextoPlano impleme
 	                      receptor = new Usuario(nombre);
 	                    }
 	                    linea = br.readLine();
-	                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
-	                    LocalDateTime fechaHora = LocalDateTime.parse(linea, formatter);
+	                    LocalDateTime fechaHora = LocalDateTime.parse(linea, this.formatter);
 	                    linea = br.readLine();
                             String contenido = linea;
                             mensajes.add(new Mensaje(contenido, fechaHora, emisor, receptor));
