@@ -46,7 +46,6 @@ public class ConcreteMensajeTextoPlano extends ConcreteFactoryTextoPlano impleme
 
 	            try (BufferedReader br = new BufferedReader(new FileReader("ConversacionesDe" + nombre + ".txt"))) {
 	                String linea;
-	                System.out.println("CARGANDO MENSAJES...");
 	                while ((linea = br.readLine()) != null) {
                             Usuario emisor, receptor;
                             if (linea.equalsIgnoreCase("Envio"))
@@ -64,8 +63,6 @@ public class ConcreteMensajeTextoPlano extends ConcreteFactoryTextoPlano impleme
 	                    linea = br.readLine();
 	                    LocalDateTime fechaHora = LocalDateTime.parse(linea, this.formatter);
 	                    linea = br.readLine();
-	                    System.out.println("emisor "+emisor.getNickName());
-	                    System.out.println("receptor "+receptor.getNickName());
                         String contenido = linea;
                         mensajes.add(new Mensaje(contenido, fechaHora, emisor, receptor));
                         }

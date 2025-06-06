@@ -71,11 +71,11 @@ public class SistemaUsuario extends Observable {
 	public String getnickName() {
 		return this.usuario.getNickName();
 	}
-
+/*
 	public int getPuerto() {
 		return this.usuario.getPuerto();
 	}
-
+*/
 	public void pedirListaUsuarios() {
 		try {
 
@@ -103,6 +103,7 @@ public class SistemaUsuario extends Observable {
 	public int agregarContacto(String nickName) {
 		int condicion = 1; // contacto ya agendado
 		if (!existeContactoPorNombre(this.usuario.getAgenda(), nickName)) {
+			System.out.println("Usuario que llego a agregar contacto "+nickName);
 			this.usuario.agregaContacto(new Usuario(nickName));
 			condicion = 2;
 		}
@@ -334,7 +335,7 @@ public class SistemaUsuario extends Observable {
 	public List<Usuario> getListaConversaciones() {
 		return this.usuario.getListaConversaciones();
 	}
-
+/*
 	public String getAlias(int puerto) {
 		PriorityQueue<Usuario> lista = this.usuario.getAgenda();
 		while (!lista.isEmpty()) {
@@ -345,5 +346,5 @@ public class SistemaUsuario extends Observable {
 		}
 		return null;
 	}
-
+*/
 }

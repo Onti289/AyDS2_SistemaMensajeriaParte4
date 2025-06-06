@@ -48,11 +48,11 @@ public class ControladorUsuario implements ActionListener, Observer {
 
 		this.sistemaUsuario.enviaSolicitudAServidor(nickName,tipoPersistencia,tipoEncriptacion, tipoSolicitud);
 	}
-	
+	/*
 	public String getNickNamePuerto() {
 		return "Nickname:" + sistemaUsuario.getnickName() + "\nPuerto:" + sistemaUsuario.getPuerto();
 	}
-
+*/
 	public List<UsuarioDTO> getAgenda() {
 		List<UsuarioDTO> lista = new ArrayList<UsuarioDTO>();
 		PriorityQueue<Usuario> copia = new PriorityQueue<>(sistemaUsuario.getAgenda());
@@ -87,7 +87,6 @@ public class ControladorUsuario implements ActionListener, Observer {
 
 	public int agregaContacto(String nickName) {
 		int nroCondicionAgregado;
-		// Si puerto esta disponible es por que no existe ningun usuario con ese puerto
 
 		nroCondicionAgregado = this.sistemaUsuario.agregarContacto(nickName);
 
@@ -192,6 +191,7 @@ public class ControladorUsuario implements ActionListener, Observer {
 			if (this.ventana2 instanceof VentanaDirectorio) {
 				VentanaDirectorio ventanaDirectorio = (VentanaDirectorio) this.ventana2;
 				UsuarioDTO usuario = ventanaDirectorio.getUsuario();
+				System.out.println("usuario a agregar "+usuario.getNombre());
 				int nroCondicionAgregado = this.agregaContacto(usuario.getNombre());
 				if (nroCondicionAgregado == 2) {
 					((VentanaDirectorio) ventana2).mostrarConfirmacionContactoAgregado();

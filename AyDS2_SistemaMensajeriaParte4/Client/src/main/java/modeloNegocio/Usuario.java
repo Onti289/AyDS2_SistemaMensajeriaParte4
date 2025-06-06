@@ -10,10 +10,10 @@ import persistencia.SelectorDePersistencia;
 import util.*;
 
 @SuppressWarnings("serial")
-public class Usuario implements Serializable {
+public class Usuario implements Serializable, Comparable<Usuario> {
 	private String nickName;
 	private String ip;
-	private int puerto;
+	//private int puerto;
 	private transient PriorityQueue<Usuario> agenda = new PriorityQueue<>(Comparator.comparing(Usuario::getNickName));
 	private String tipoPersistencia;
 	private String tipoEncriptacion;
@@ -28,7 +28,7 @@ public class Usuario implements Serializable {
 		super();
 		this.nickName = nickName;
 		this.ip = Util.IPLOCAL;
-		this.puerto = puerto;
+	//	this.puerto = puerto;
 	}
 
 	// constructor para agregar contacto
@@ -36,20 +36,20 @@ public class Usuario implements Serializable {
 		super();
 		this.nickName = nickName;
 		this.ip = ip;
-		this.puerto = puerto;
+	//	this.puerto = puerto;
 	}
 
 	public Usuario(String nickName) {
 		super();
 		this.nickName = nickName;
-		this.puerto = 0;
+		//this.puerto = 0;
 		this.ip = null;
 	}
 
 	public Usuario(String nickName, String tipoPersistencia,String tipoEncriptacion) {
 		super();
 		this.nickName = nickName;
-		this.puerto = 0;
+	//	this.puerto = 0;
 		this.ip = null;
 		this.tipoPersistencia = tipoPersistencia;
 		IAbstractFactoryPersistencia fabricaPersistencia = SelectorDePersistencia.getFabrica(tipoPersistencia);
@@ -73,7 +73,7 @@ public class Usuario implements Serializable {
 	public void setIp(String ip) {
 		this.ip = ip;
 	}
-
+/*
 	public int getPuerto() {
 		return puerto;
 	}
@@ -81,7 +81,7 @@ public class Usuario implements Serializable {
 	public void setPuerto(int puerto) {
 		this.puerto = puerto;
 	}
-	
+	*/
 	public String getTipoPersistencia() {
 		return tipoPersistencia;
 	}
@@ -116,12 +116,12 @@ public class Usuario implements Serializable {
 		Usuario other = (Usuario) obj;
 		return this.nickName.equalsIgnoreCase(other.nickName);
 	}
-
+/*
 	@Override
 	public int hashCode() {
 		return Integer.hashCode(puerto);
 	}
-
+*/
 	public ArrayList<Mensaje> getMensajes() {
 		return this.mensajes;
 	}
@@ -170,8 +170,9 @@ public class Usuario implements Serializable {
 
 	public void agregaContacto(Usuario contacto) {
 		System.out.println("Contacto persistencia " + this.contactoPersistencia);
-		agenda.add(contacto);
 
+		agenda.add(contacto);
+		
 		this.contactoPersistencia.guardarContacto(this.nickName, contacto.getNickName());
 	}
 
@@ -194,7 +195,7 @@ public class Usuario implements Serializable {
 		}
 		return null; // No se encontro
 	}
-
+/*
 	public boolean estaContacto(int puerto) {
 		PriorityQueue<Usuario> agendaCopia = new PriorityQueue<>(agenda);
 		boolean esta = false;
@@ -206,7 +207,7 @@ public class Usuario implements Serializable {
 		}
 		return esta;
 	}
-
+*/
 	public void CargaMensajesContactos() {
 		this.agenda = this.contactoPersistencia.cargarContacto(this.nickName);
 		this.mensajes = this.mensajePersistencia.cargarMensaje(this.nickName);
@@ -227,5 +228,10 @@ public class Usuario implements Serializable {
 				
 		}
 		
+	}
+
+	@Override
+	public int compareTo(Usuario arg0) { //este metodo lo tenemos que usar si o si para que ande el priority agenda
+        return this.nickName.compareToIgnoreCase(arg0.nickName);
 	}
 }
