@@ -16,6 +16,8 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import java.awt.FlowLayout;
+
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.SwingConstants;
@@ -34,6 +36,9 @@ public class VentanaLoginORegistrar extends JFrame implements IVistaUsuario, Act
 	private JLabel labelPersistencia;
 	private JComboBox<String> comboEncriptacion;
 	private JLabel labelEncriptacion;
+	private JTextField textFieldClaveEncriptacion;
+	private JLabel labelClaveEncriptacion;
+
 	/**
 	 * Launch the application.
 	 */
@@ -41,62 +46,70 @@ public class VentanaLoginORegistrar extends JFrame implements IVistaUsuario, Act
 	/**
 	 * Create the frame.
 	 */
-	public VentanaLoginORegistrar(ControladorUsuario controlador,String titulo,String nombreBoton,String nombreAccion) {
-		this.controlador = controlador;
-		setTitle(titulo);
-		setResizable(false);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 250, 250);
-		contentPane = new JPanel();
-		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+	public VentanaLoginORegistrar(ControladorUsuario controlador, String titulo, String nombreBoton, String nombreAccion) {
+	    this.controlador = controlador;
+	    setTitle(titulo);
+	    setResizable(false);
+	    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	    setBounds(100, 100, 300, 300);  // Más espacio
+	    contentPane = new JPanel();
+	    contentPane.setBorder(new EmptyBorder(10, 10, 10, 10));
+	    contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
+	    setContentPane(contentPane);
 
-		setContentPane(contentPane);
-		contentPane.setLayout(new GridLayout(3,1));
+	    // Panel para el nickname
+	    JPanel panelNick = new JPanel(new FlowLayout(FlowLayout.LEFT));
+	    JLabel labelNick = new JLabel("NickName:");
+	    textFieldUsuario = new JTextField(15);
+	    textFieldUsuario.addKeyListener(this);
+	    panelNick.add(labelNick);
+	    panelNick.add(textFieldUsuario);
+	    contentPane.add(panelNick);
 
-		JPanel panel_nickName = new JPanel(null);
-		contentPane.add(panel_nickName);
-		
+	    // Panel persistencia (solo en registro)
+	    if (nombreAccion.equalsIgnoreCase(Util.CTEREGISTRAR)) {
+	        JPanel panelPersistencia = new JPanel();
+	        panelPersistencia.setLayout(new BoxLayout(panelPersistencia, BoxLayout.Y_AXIS));
 
-		JLabel label_NickName = new JLabel("NickName:");
-		
-		label_NickName.setBounds(10, 20, 80, 20);
-		panel_nickName.add(label_NickName);
-		
-		textFieldUsuario = new JTextField();
-		textFieldUsuario.addKeyListener(this);
-		textFieldUsuario.setBounds(100, 20, 100, 20);
-		panel_nickName.add(textFieldUsuario);
-		
-		// NUEVO: Panel para la persistencia (visible solo si es registro)
-				JPanel panelPersistencia = new JPanel(null);
-				if (nombreAccion.equalsIgnoreCase(Util.CTEREGISTRAR)) {
-					labelPersistencia = new JLabel("Persistencia:");
-					labelPersistencia.setBounds(10, 10, 100, 20);
-					panelPersistencia.add(labelPersistencia);
+	        JPanel fila1 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+	        labelPersistencia = new JLabel("Persistencia:");
+	        comboPersistencia = new JComboBox<>(new String[]{Util.XML, Util.JSON, Util.TEXTO_PLANO});
+	        fila1.add(labelPersistencia);
+	        fila1.add(comboPersistencia);
+	        panelPersistencia.add(fila1);
 
-					comboPersistencia = new JComboBox<>(new String[] { Util.XML,Util.JSON,Util.TEXTO_PLANO });
-					comboPersistencia.setBounds(100, 10, 100, 20);
-					panelPersistencia.add(comboPersistencia);
-					 // Encriptación
-				    labelEncriptacion = new JLabel("Encriptación:");
-				    labelEncriptacion.setBounds(10, 40, 100, 20);
-				    panelPersistencia.add(labelEncriptacion);
+	        JPanel fila2 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+	        labelEncriptacion = new JLabel("Encriptación:");
+	        comboEncriptacion = new JComboBox<>(new String[]{"Confederados", "XOR"});
+	        fila2.add(labelEncriptacion);
+	        fila2.add(comboEncriptacion);
+	        panelPersistencia.add(fila2);
 
-				    comboEncriptacion = new JComboBox<>(new String[] { "AES", "XOR" });
-				    comboEncriptacion.setBounds(100, 40, 100, 20);
-				    panelPersistencia.add(comboEncriptacion);
-					contentPane.add(panelPersistencia);
-				}
-		
-		JPanel panel_Registrarse = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 20));
-		contentPane.add(panel_Registrarse);
-		
-		this.boton = new JButton(nombreBoton);
-		this.boton.setToolTipText(nombreBoton);
-		this.boton.setEnabled(false);
-		this.boton.setActionCommand(nombreAccion);
-		panel_Registrarse.add(this.boton);
+	        JPanel fila3 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+	        labelClaveEncriptacion = new JLabel("Clave:");
+	        textFieldClaveEncriptacion = new JTextField(15);
+	        textFieldClaveEncriptacion.addKeyListener(this);
+	        fila3.add(labelClaveEncriptacion);
+	        fila3.add(textFieldClaveEncriptacion);
+	        panelPersistencia.add(fila3);
+
+	        contentPane.add(panelPersistencia);
+	    }
+
+	    // Botón
+	    JPanel panelBoton = new JPanel();
+	    this.boton = new JButton(nombreBoton);
+	    this.boton.setToolTipText(nombreBoton);
+	    this.boton.setEnabled(false);
+	    this.boton.setActionCommand(nombreAccion);
+	    panelBoton.add(this.boton);
+	    contentPane.add(panelBoton);
 	}
+
+	public String getClaveEncriptacion() {
+	    return textFieldClaveEncriptacion != null ? textFieldClaveEncriptacion.getText() : null;
+	}
+
 	public String getTipoEncriptacionSeleccionada() {
 	    return comboEncriptacion != null ? (String) comboEncriptacion.getSelectedItem() : null;
 	}
@@ -119,6 +132,12 @@ public class VentanaLoginORegistrar extends JFrame implements IVistaUsuario, Act
 	public void refrescaPantalla() {
 		deshabilitarBoton();
 	    vaciarTextFieldNickName();
+	    vaciarTextFieldClave();
+	}
+	
+	private void vaciarTextFieldClave() {
+		if (textFieldClaveEncriptacion != null)
+			this.textFieldClaveEncriptacion.setText("");	
 	}
 
 	//metodo para pantalla login o registro
@@ -159,10 +178,17 @@ public class VentanaLoginORegistrar extends JFrame implements IVistaUsuario, Act
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		// TODO Auto-generated method stub
-		this.boton.setEnabled(
-				!(textFieldUsuario.getText().isEmpty()));
+	    String nick = textFieldUsuario.getText().trim();
+
+	    // Si el campo clave no existe (modo login), solo validás el nick
+	    if (textFieldClaveEncriptacion == null) {
+	        boton.setEnabled(!nick.isEmpty());
+	    } else {
+	        String clave = textFieldClaveEncriptacion.getText().trim();
+	        boton.setEnabled(!nick.isEmpty() && !clave.isEmpty());
+	    }
 	}
+
 
 	@Override
 	public void actionPerformed(ActionEvent e) {

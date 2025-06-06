@@ -207,6 +207,9 @@ public class SistemaUsuario extends Observable {
 									setUsuario(solicitud.getNombre(), solicitud.getUsuarioDTO().getTipoPersistencia(),
 											solicitud.getUsuarioDTO().getTipoEncriptacion());
 								}
+								if(solicitud.getTipoSolicitud().equalsIgnoreCase(Util.CTEREGISTRO)) {
+									
+								}
 								setChanged(); // importante
 								notifyObservers(solicitud);
 							} else {
