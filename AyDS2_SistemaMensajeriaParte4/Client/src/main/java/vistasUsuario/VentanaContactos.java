@@ -10,6 +10,9 @@ import util.Util;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
+import java.awt.Image;
+import java.awt.Toolkit;
+
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JList;
@@ -43,6 +46,8 @@ public class VentanaContactos extends JFrame implements IVistaUsuario, ActionLis
         this.controlador = controlador;
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setBounds(100, 100, 450, 300);
+        Image icono = Toolkit.getDefaultToolkit().getImage("💌.png");
+        setIconImage(icono);
         this.contentPane = new JPanel();
         this.contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 

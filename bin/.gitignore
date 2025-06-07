@@ -1,11 +1,8 @@
 /controlador/
-/diagramas/
-/dto/
-/excepciones/
+/encriptacion/
 /modeloNegocio/
 /persistencia/
 /sistemaMensajeria/
-/util/
+/vistasUsuario/
 /vistaMonitor/
 /vistaServidor/
-/vistasUsuario/

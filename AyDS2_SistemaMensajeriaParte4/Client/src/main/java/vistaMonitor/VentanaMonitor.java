@@ -1,11 +1,14 @@
 package vistaMonitor;
 
 import java.awt.GridLayout;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -29,7 +32,8 @@ public class VentanaMonitor extends JFrame {
 	        setTitle("Monitoreo de Servidores");
 	        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	        setSize(600, 400);
-
+	        Image icono = Toolkit.getDefaultToolkit().getImage("💌.png");
+	        setIconImage(icono);
 	        // Panel izquierdo
 	        JPanel panelIzquierdo = new JPanel();
 	        panelIzquierdo.setLayout(new BoxLayout(panelIzquierdo, BoxLayout.Y_AXIS));

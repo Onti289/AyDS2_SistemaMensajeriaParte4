@@ -20,6 +20,8 @@ public class VentanaRegistraServidor extends JFrame implements IVistaServidor{
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(300, 200);
         setLocationRelativeTo(null);
+        Image icono = Toolkit.getDefaultToolkit().getImage("💌.png");
+        setIconImage(icono);
 
         JLabel lblIP = new JLabel("IP:");
         JLabel lblPuerto = new JLabel("Puerto (1025 o 1026):");

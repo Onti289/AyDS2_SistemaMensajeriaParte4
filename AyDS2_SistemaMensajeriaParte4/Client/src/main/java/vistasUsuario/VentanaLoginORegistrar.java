@@ -7,6 +7,8 @@ import controlador.*;
 import util.Util;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -52,6 +54,8 @@ public class VentanaLoginORegistrar extends JFrame implements IVistaUsuario, Act
 	    setResizable(false);
 	    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	    setBounds(100, 100, 300, 300);  // Más espacio
+	    Image icono = Toolkit.getDefaultToolkit().getImage("💌.png");
+        setIconImage(icono);
 	    contentPane = new JPanel();
 	    contentPane.setBorder(new EmptyBorder(10, 10, 10, 10));
 	    contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));

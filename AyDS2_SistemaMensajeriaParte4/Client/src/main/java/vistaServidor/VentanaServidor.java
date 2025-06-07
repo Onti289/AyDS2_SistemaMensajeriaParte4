@@ -18,6 +18,8 @@ public class VentanaServidor extends JFrame implements IVistaServidor {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // No cerrar directamente
         setSize(300, 200);
         setLocationRelativeTo(null); // Centrar la ventana
+        Image icono = Toolkit.getDefaultToolkit().getImage("💌.png");
+        setIconImage(icono);
 
         JPanel panelPrincipal = new JPanel();
         panelPrincipal.setLayout(new GridBagLayout());

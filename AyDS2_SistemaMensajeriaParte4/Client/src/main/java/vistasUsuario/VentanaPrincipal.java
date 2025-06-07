@@ -13,6 +13,8 @@ import util.Util;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -69,6 +71,8 @@ public class VentanaPrincipal extends JFrame implements IVistaUsuario, ActionLis
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		Image icono = Toolkit.getDefaultToolkit().getImage("💌.png");
+        setIconImage(icono);
 
 		setContentPane(contentPane);
 		contentPane.setLayout(new GridLayout(1, 2, 0, 0));

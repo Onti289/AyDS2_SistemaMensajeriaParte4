@@ -7,6 +7,9 @@ import javax.swing.JPanel;
 import util.Util;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
+import java.awt.Image;
+import java.awt.Toolkit;
+
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -28,6 +31,8 @@ public class VentanaInicial extends JFrame implements IVistaUsuario, ActionListe
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(300, 250);
         setLocationRelativeTo(null);
+        Image icono = Toolkit.getDefaultToolkit().getImage("💌.png");
+        setIconImage(icono);
 
         JPanel panelPrincipal = new JPanel();
         panelPrincipal.setLayout(new BoxLayout(panelPrincipal, BoxLayout.Y_AXIS));
