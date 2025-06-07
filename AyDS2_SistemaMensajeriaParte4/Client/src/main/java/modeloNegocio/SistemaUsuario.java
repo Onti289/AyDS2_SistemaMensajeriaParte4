@@ -1,11 +1,13 @@
 package modeloNegocio;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-
+import java.io.Writer;
 import java.net.Socket;
 
 import java.time.LocalDateTime;
@@ -24,11 +26,14 @@ public class SistemaUsuario extends Observable {
 	private int puerto_servidor;
 	private static String ip_monitor;
 	private static int puerto_Monitor;
+	private String claveEncriptacion;
+	private String tipoEncriptacion;
 	// Socket y flujos para comunicarse con el servidor
 	private Socket socketServidor;
 	private ObjectOutputStream oos = null;
 	private ObjectInputStream ois = null;
-
+	
+	
 	private SistemaUsuario() {
 		ObtienePuertoEIpMonitor();
 	}
@@ -206,10 +211,9 @@ public class SistemaUsuario extends Observable {
 										|| solicitud.getTipoSolicitud().equalsIgnoreCase(Util.CTELOGIN)) {
 									setUsuario(solicitud.getNombre(), solicitud.getUsuarioDTO().getTipoPersistencia(),
 											solicitud.getUsuarioDTO().getTipoEncriptacion());
+									cargaEncriptacion();
 								}
-								if(solicitud.getTipoSolicitud().equalsIgnoreCase(Util.CTEREGISTRO)) {
-									
-								}
+					
 								setChanged(); // importante
 								notifyObservers(solicitud);
 							} else {
@@ -266,6 +270,15 @@ public class SistemaUsuario extends Observable {
 		}
 	}
 
+	private void cargaEncriptacion() {
+		   try (Writer cargaEncriptacion = new FileWriter("configuracionDe" +this.getnickName()  + ".txt")) {
+			   cargaEncriptacion.append(this.tipoEncriptacion+"\n");
+			   cargaEncriptacion.append(this.claveEncriptacion);
+	            } catch (IOException e) {
+	        }
+		
+	}
+
 	private void cerrarConexionAnterior() {
 		try {
 			if (ois != null)
@@ -320,10 +333,14 @@ public class SistemaUsuario extends Observable {
 	}
 
 	public void enviaSolicitudAServidor(String nickName, String tipoPersistencia, String tipoEncriptacion,
-			String tipoSolicitud) {
+			String claveEncriptacion,String tipoSolicitud) {
 
 		try {
 			if (this.puerto_servidor != -1) {
+				if(tipoSolicitud.equalsIgnoreCase(Util.CTEREGISTRAR)) {
+					this.claveEncriptacion=claveEncriptacion;
+					this.tipoEncriptacion=tipoEncriptacion;	
+				}
 				Solicitud soli = new Solicitud(new UsuarioDTO(nickName, tipoPersistencia, tipoEncriptacion),
 						tipoSolicitud);
 				oos.writeObject(soli);
@@ -338,6 +355,18 @@ public class SistemaUsuario extends Observable {
 	public List<Usuario> getListaConversaciones() {
 		return this.usuario.getListaConversaciones();
 	}
+	public void obtieneClaveyTipoEncriptacion() {
+
+        try (BufferedReader br = new BufferedReader(new FileReader("configuracionDe" +this.getnickName()  + ".txt"))) {
+            String linea;
+            linea = br.readLine();
+            this.tipoEncriptacion=linea;
+            linea = br.readLine();
+            this.claveEncriptacion=linea;
+            } catch (IOException e) {
+            }
+	}
+	
 /*
 	public String getAlias(int puerto) {
 		PriorityQueue<Usuario> lista = this.usuario.getAgenda();
