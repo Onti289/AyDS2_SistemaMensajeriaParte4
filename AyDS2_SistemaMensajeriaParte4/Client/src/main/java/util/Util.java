@@ -39,5 +39,6 @@ public class Util {
     public static final String JSON="JSON";
     public static final String XML="XML";
     public static final String TEXTO_PLANO="TEXTO PLANO";
-
+	public static final String XOR = "XOR";
+	public static final String CONFEDERADOS = "Confederados";
 }

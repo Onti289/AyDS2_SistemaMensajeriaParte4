@@ -84,7 +84,7 @@ public class VentanaLoginORegistrar extends JFrame implements IVistaUsuario, Act
 
 	        JPanel fila2 = new JPanel(new FlowLayout(FlowLayout.LEFT));
 	        labelEncriptacion = new JLabel("Encriptación:");
-	        comboEncriptacion = new JComboBox<>(new String[]{"Confederados", "XOR"});
+	        comboEncriptacion = new JComboBox<>(new String[]{Util.CONFEDERADOS, Util.XOR});
 	        fila2.add(labelEncriptacion);
 	        fila2.add(comboEncriptacion);
 	        panelPersistencia.add(fila2);

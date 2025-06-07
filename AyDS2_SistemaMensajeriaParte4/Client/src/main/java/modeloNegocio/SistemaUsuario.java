@@ -17,7 +17,9 @@ import dto.RespuestaListaMensajes;
 import dto.RespuestaLista;
 import dto.MensajeDTO;
 import dto.UsuarioDTO;
-
+import encriptacion.EncriptacionConfederados;
+import encriptacion.EncriptacionXoR;
+import encriptacion.IEncriptacion;
 import util.Util;
 
 public class SistemaUsuario extends Observable {
@@ -28,11 +30,11 @@ public class SistemaUsuario extends Observable {
 	private static int puerto_Monitor;
 	private String claveEncriptacion;
 	private String tipoEncriptacion;
+	private IEncriptacion encriptacion;
 	// Socket y flujos para comunicarse con el servidor
 	private Socket socketServidor;
 	private ObjectOutputStream oos = null;
 	private ObjectInputStream ois = null;
-	
 	
 	private SistemaUsuario() {
 		ObtienePuertoEIpMonitor();
@@ -192,35 +194,37 @@ public class SistemaUsuario extends Observable {
 				try {
 					while (true) {
 						Object recibido = ois.readObject();
-						System.out.println("Tercero " + ois);
 						if (recibido instanceof Mensaje) {
 							Mensaje mensaje = (Mensaje) recibido;
-
+							System.out.println("Llegó mensaje encriptado: " + mensaje.getContenido());
+							String mensajeDesencriptado = this.encriptacion.desencriptar(mensaje.getContenido(), this.claveEncriptacion);
+							mensaje.setContenido(mensajeDesencriptado);
+							System.out.println("Mensaje desencriptado: " + mensaje.getContenido());
 							this.usuario.recibirMensaje(mensaje);
 							setChanged(); // importante
 							notifyObservers(mensaje);
-
 						} else {// si llega aca es por que el server lo pudo registrar o loguear
-
 							if (recibido instanceof Solicitud) {
 								Solicitud solicitud = (Solicitud) recibido;
-
 								// Si registra o loguea lo tiene que crear igual por que inicio de 0 el sistema
 								// usuario
 								if (solicitud.getTipoSolicitud().equalsIgnoreCase(Util.CTEREGISTRO)
 										|| solicitud.getTipoSolicitud().equalsIgnoreCase(Util.CTELOGIN)) {
 									setUsuario(solicitud.getNombre(), solicitud.getUsuarioDTO().getTipoPersistencia(),
 											solicitud.getUsuarioDTO().getTipoEncriptacion());
-									cargaEncriptacion();
+									if (solicitud.getTipoSolicitud().equalsIgnoreCase(Util.CTELOGIN)) {
+										cargaClaveyTipoEncriptacion();
+									}
+									else{
+										guardaEncriptacionEnArchivo();
+									}
 								}
-					
 								setChanged(); // importante
 								notifyObservers(solicitud);
 							} else {
 								if (recibido instanceof RespuestaListaMensajes) {
 									RespuestaListaMensajes respuesta = (RespuestaListaMensajes) recibido;
 									List<MensajeDTO> mensajes = respuesta.getLista();
-
 									for (MensajeDTO m : mensajes) {
 										String nick = m.getEmisor().getNombre();
 										int puertoaux = m.getEmisor().getPuerto();
@@ -230,8 +234,9 @@ public class SistemaUsuario extends Observable {
 										puertoaux = m.getReceptor().getPuerto();
 										ip = m.getReceptor().getIp();
 										Usuario receptor = new Usuario(nick, puertoaux, ip);
+										String mensajeDesencriptado = this.encriptacion.desencriptar(m.getContenido(), this.claveEncriptacion);
 										this.usuario.recibirMensaje(
-												new Mensaje(m.getContenido(), m.getFechayhora(), emisor, receptor));										
+												new Mensaje(mensajeDesencriptado, m.getFechayhora(), emisor, receptor));
 										if(m.getEmisor().getNombre().equalsIgnoreCase(getnickName())) {			
 											agregarConversacion(new Usuario(m.getReceptor().getNombre()));
 										}
@@ -257,7 +262,6 @@ public class SistemaUsuario extends Observable {
 				} catch (Exception e) {
 					e.printStackTrace(); // conexión caída
 					this.puerto_servidor = -1;
-					System.out.println("Llego aca 22");
 					estableceConexion(nombreUser);
 
 				}
@@ -265,18 +269,17 @@ public class SistemaUsuario extends Observable {
 			escuchaServidor.start();
 
 		} catch (IOException e) {
-			System.out.println("Llego aca 33");
 			e.printStackTrace();
 		}
 	}
 
-	private void cargaEncriptacion() {
-		   try (Writer cargaEncriptacion = new FileWriter("configuracionDe" +this.getnickName()  + ".txt")) {
-			   cargaEncriptacion.append(this.tipoEncriptacion+"\n");
-			   cargaEncriptacion.append(this.claveEncriptacion);
-	            } catch (IOException e) {
-	        }
-		
+	private void guardaEncriptacionEnArchivo() {
+		try (Writer cargaEncriptacion = new FileWriter("configuracionDe" +this.getnickName()  + ".txt")) {
+			cargaEncriptacion.append(this.tipoEncriptacion+"\n");
+			cargaEncriptacion.append(this.claveEncriptacion);
+	    } catch (IOException e) {
+	    	e.printStackTrace();
+	    }
 	}
 
 	private void cerrarConexionAnterior() {
@@ -318,15 +321,17 @@ public class SistemaUsuario extends Observable {
 			Usuario ureceptor = this.buscarUsuarioPorDTO(contacto);
 			Mensaje msg;
 			if (ureceptor != null) {
-				msg = new Mensaje(mensaje, LocalDateTime.now(), this.usuario, ureceptor);
+				String mensajeEncriptado = this.encriptacion.encriptar(mensaje, this.claveEncriptacion);
+				msg = new Mensaje(mensajeEncriptado, LocalDateTime.now(), this.usuario, ureceptor);
 				oos.writeObject(msg);
 				oos.flush();
+				System.out.println("Envía mensaje encriptado: " + msg.getContenido());
+				msg.setContenido(mensaje);
+				System.out.println("Mensaje sin encriptar: " + msg.getContenido());
 				this.usuario.guardarMensaje(msg);
 				setChanged(); // importante
 				notifyObservers(msg);
-
 			}
-
 		} catch (IOException e) {
 			estableceConexion(this.usuario.getNickName());
 		}
@@ -339,7 +344,8 @@ public class SistemaUsuario extends Observable {
 			if (this.puerto_servidor != -1) {
 				if(tipoSolicitud.equalsIgnoreCase(Util.CTEREGISTRAR)) {
 					this.claveEncriptacion=claveEncriptacion;
-					this.tipoEncriptacion=tipoEncriptacion;	
+					this.tipoEncriptacion=tipoEncriptacion;
+					this.guardaTipoEncriptacion(tipoEncriptacion);
 				}
 				Solicitud soli = new Solicitud(new UsuarioDTO(nickName, tipoPersistencia, tipoEncriptacion),
 						tipoSolicitud);
@@ -348,25 +354,39 @@ public class SistemaUsuario extends Observable {
 			}
 
 		} catch (IOException e) {
-			System.out.println("error");
+			System.err.println("error");
+			e.printStackTrace();
 		}
 	}
 
 	public List<Usuario> getListaConversaciones() {
 		return this.usuario.getListaConversaciones();
 	}
-	public void obtieneClaveyTipoEncriptacion() {
-
+	
+	public void cargaClaveyTipoEncriptacion() {
         try (BufferedReader br = new BufferedReader(new FileReader("configuracionDe" +this.getnickName()  + ".txt"))) {
             String linea;
             linea = br.readLine();
-            this.tipoEncriptacion=linea;
+            this.guardaTipoEncriptacion(linea);
             linea = br.readLine();
             this.claveEncriptacion=linea;
-            } catch (IOException e) {
-            }
+        } catch (IOException e) {
+        	e.printStackTrace();
+        }
 	}
 	
+	private void guardaTipoEncriptacion(String tipo) {
+		switch (tipo) {
+		case Util.XOR:
+			this.encriptacion = new EncriptacionXoR();
+			break;
+		case Util.CONFEDERADOS:
+			this.encriptacion = new EncriptacionConfederados();
+			break;
+		default:
+			break;
+		}
+	}
 /*
 	public String getAlias(int puerto) {
 		PriorityQueue<Usuario> lista = this.usuario.getAgenda();
