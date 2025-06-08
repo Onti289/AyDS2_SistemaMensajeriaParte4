@@ -71,8 +71,11 @@
    <value n="defaultPackage" v="client"/>
    <hash n="oracle.ide.model.TechnologyScopeConfiguration">
       <list n="technologyScope">
+         <string v="EJB-Modeling"/>
          <string v="Java"/>
+         <string v="Java-Modeling"/>
          <string v="Maven"/>
+         <string v="UML"/>
          <string v="XML"/>
       </list>
    </hash>
