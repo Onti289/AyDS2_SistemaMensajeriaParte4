@@ -30,6 +30,7 @@ public class SistemaUsuario extends Observable {
 	private static int puerto_Monitor;
 	private String claveEncriptacion;
 	private String tipoEncriptacion;
+	private String tipoPersistencia;
 	private IEncriptacion encriptacion;
 	// Socket y flujos para comunicarse con el servidor
 	private Socket socketServidor;
@@ -210,14 +211,14 @@ public class SistemaUsuario extends Observable {
 								// usuario
 								if (solicitud.getTipoSolicitud().equalsIgnoreCase(Util.CTEREGISTRO)
 										|| solicitud.getTipoSolicitud().equalsIgnoreCase(Util.CTELOGIN)) {
-									setUsuario(solicitud.getNombre(), solicitud.getUsuarioDTO().getTipoPersistencia(),
-											solicitud.getUsuarioDTO().getTipoEncriptacion());
 									if (solicitud.getTipoSolicitud().equalsIgnoreCase(Util.CTELOGIN)) {
-										cargaClaveyTipoEncriptacion();
+										cargaClaveTipoEncriptacionyPersistencia(solicitud.getNombre());
 									}
 									else{
-										guardaEncriptacionEnArchivo();
+										guardaEncriptacionyPersistenciaEnArchivo(solicitud.getNombre());
 									}
+									setUsuario(solicitud.getNombre(), this.tipoPersistencia,
+											this.tipoEncriptacion);									
 								}
 								setChanged(); // importante
 								notifyObservers(solicitud);
@@ -273,10 +274,11 @@ public class SistemaUsuario extends Observable {
 		}
 	}
 
-	private void guardaEncriptacionEnArchivo() {
-		try (Writer cargaEncriptacion = new FileWriter("configuracionDe" +this.getnickName()  + ".txt")) {
+	private void guardaEncriptacionyPersistenciaEnArchivo(String nickname) {
+		try (Writer cargaEncriptacion = new FileWriter("configuracionDe" +nickname + ".txt")) {
 			cargaEncriptacion.append(this.tipoEncriptacion+"\n");
-			cargaEncriptacion.append(this.claveEncriptacion);
+			cargaEncriptacion.append(this.claveEncriptacion+"\n");
+			cargaEncriptacion.append(this.tipoPersistencia);
 	    } catch (IOException e) {
 	    	e.printStackTrace();
 	    }
@@ -346,8 +348,9 @@ public class SistemaUsuario extends Observable {
 					this.claveEncriptacion=claveEncriptacion;
 					this.tipoEncriptacion=tipoEncriptacion;
 					this.guardaTipoEncriptacion(tipoEncriptacion);
+					this.tipoPersistencia=tipoPersistencia;	
 				}
-				Solicitud soli = new Solicitud(new UsuarioDTO(nickName, tipoPersistencia, tipoEncriptacion),
+				Solicitud soli = new Solicitud(new UsuarioDTO(nickName),
 						tipoSolicitud);
 				oos.writeObject(soli);
 				oos.flush();
@@ -363,13 +366,16 @@ public class SistemaUsuario extends Observable {
 		return this.usuario.getListaConversaciones();
 	}
 	
-	public void cargaClaveyTipoEncriptacion() {
-        try (BufferedReader br = new BufferedReader(new FileReader("configuracionDe" +this.getnickName()  + ".txt"))) {
+	public void cargaClaveTipoEncriptacionyPersistencia(String nickname) {
+        try (BufferedReader br = new BufferedReader(new FileReader("configuracionDe" +nickname + ".txt"))) {
             String linea;
             linea = br.readLine();
             this.guardaTipoEncriptacion(linea);
             linea = br.readLine();
             this.claveEncriptacion=linea;
+            linea = br.readLine();
+            this.tipoPersistencia=linea;
+            
         } catch (IOException e) {
         	e.printStackTrace();
         }

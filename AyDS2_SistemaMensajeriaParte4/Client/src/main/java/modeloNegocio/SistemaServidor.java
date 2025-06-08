@@ -119,9 +119,6 @@ public class SistemaServidor {
 
 									case Util.CTEREGISTRAR:
 										UsuarioDTO usuarioReg = solicitud.getUsuarioDTO();
-										System.out.println("Tipo de persistencia "+usuarioReg.getTipoPersistencia());
-										System.out.println("Usuario que llega a reg "+usuarioReg.getNombre());
-										System.out.println("Tipo de encriptacion "+usuarioReg.getTipoEncriptacion());
 										if (registrarUsuario(usuarioReg)) {
 											solicitud.setTipoSolicitud(Util.CTEREGISTRO);	
 											principalSincronizaSecundario(solicitud);
@@ -140,8 +137,6 @@ public class SistemaServidor {
 											solicitud.setTipoSolicitud(Util.CTELOGIN);
 											Usuario usuario=buscayObtieneUsuario(usuarioLogin);
 											this.listaConectados.add(new Usuario(usuarioLogin.getNombre()));
-											solicitud.getUsuarioDTO().setTipoPersistencia(usuario.getTipoPersistencia());
-											solicitud.getUsuarioDTO().setTipoEncriptacion(usuario.getTipoEncriptacion());
 											principalSincronizaSecundario(solicitud);
 										} else if (tipo == 2) {
 											solicitud.setTipoSolicitud(Util.CTEUSUARIOLOGUEADO);
@@ -608,7 +603,7 @@ public class SistemaServidor {
 	public boolean registrarUsuario(UsuarioDTO usuariodto) {
 		boolean registro = true;
 		if (!existeUsuarioPorNombre(usuariodto.getNombre())) {
-			Usuario usuario = new Usuario(usuariodto.getNombre(),usuariodto.getTipoPersistencia(),usuariodto.getTipoEncriptacion());
+			Usuario usuario = new Usuario(usuariodto.getNombre());
 			this.listaUsuarios.add(usuario);
 			this.listaConectados.add(usuario);
 		} else {
